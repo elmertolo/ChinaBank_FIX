@@ -16,5 +16,24 @@ namespace ChinaBank_FIX
         {
             InitializeComponent();
         }
+       public static string activeB = "";
+        private void btnCBC_Click(object sender, EventArgs e)
+        {
+           
+            CBC cbc = new CBC();
+            cbc.Show();
+            this.Hide();
+            activeB = "CBC";
+
+        }
+
+        private void btmCBS_Click(object sender, EventArgs e)
+        {
+            activeB = "CBS";
+            CBS cbs = new CBS();
+            cbs.Show();
+            this.Hide();
+            
+        }
     }
 }

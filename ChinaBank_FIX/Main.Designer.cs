@@ -42,6 +42,7 @@
             this.btnCBC.TabIndex = 0;
             this.btnCBC.Text = "CBC";
             this.btnCBC.UseVisualStyleBackColor = false;
+            this.btnCBC.Click += new System.EventHandler(this.btnCBC_Click);
             // 
             // btmCBS
             // 
@@ -53,6 +54,7 @@
             this.btmCBS.TabIndex = 1;
             this.btmCBS.Text = "CBS";
             this.btmCBS.UseVisualStyleBackColor = false;
+            this.btmCBS.Click += new System.EventHandler(this.btmCBS_Click);
             // 
             // Main
             // 
