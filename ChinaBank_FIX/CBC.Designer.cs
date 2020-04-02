@@ -33,16 +33,19 @@
             this.checkToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fixToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.lblErrors = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // dataGridView1
             // 
+            this.dataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.DisplayedCells;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Location = new System.Drawing.Point(12, 36);
             this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(546, 231);
+            this.dataGridView1.Size = new System.Drawing.Size(652, 231);
             this.dataGridView1.TabIndex = 2;
             // 
             // menuStrip1
@@ -53,7 +56,7 @@
             this.exitToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(570, 25);
+            this.menuStrip1.Size = new System.Drawing.Size(676, 25);
             this.menuStrip1.TabIndex = 3;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -71,6 +74,7 @@
             this.fixToolStripMenuItem.Name = "fixToolStripMenuItem";
             this.fixToolStripMenuItem.Size = new System.Drawing.Size(37, 21);
             this.fixToolStripMenuItem.Text = "Fix";
+            this.fixToolStripMenuItem.Click += new System.EventHandler(this.fixToolStripMenuItem_Click);
             // 
             // exitToolStripMenuItem
             // 
@@ -80,13 +84,35 @@
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
+            // lblErrors
+            // 
+            this.lblErrors.AutoSize = true;
+            this.lblErrors.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblErrors.Location = new System.Drawing.Point(99, 271);
+            this.lblErrors.Name = "lblErrors";
+            this.lblErrors.Size = new System.Drawing.Size(16, 16);
+            this.lblErrors.TabIndex = 8;
+            this.lblErrors.Text = "0";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(9, 271);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(94, 16);
+            this.label1.TabIndex = 7;
+            this.label1.Text = "Total Errors:";
+            // 
             // CBC
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.ClientSize = new System.Drawing.Size(570, 278);
+            this.ClientSize = new System.Drawing.Size(676, 292);
             this.ControlBox = false;
+            this.Controls.Add(this.lblErrors);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
@@ -108,5 +134,7 @@
         private System.Windows.Forms.ToolStripMenuItem checkToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem fixToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
+        private System.Windows.Forms.Label lblErrors;
+        private System.Windows.Forms.Label label1;
     }
 }

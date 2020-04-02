@@ -21,13 +21,11 @@ namespace ChinaBank_FIX.Services
 
         public void DBCon()
         {
-            //Main f1 = new Main();
-            //BPI bpi = new BPI();
             
             string DBConnection = "";
            //if (Main.activeB == "CBC")
            // {
-                DBConnection = "datasource=localhost;port=3306;username=root;password=corpcaptive; convert zero datetime=True;";
+              //  DBConnection = "datasource=localhost;port=3306;username=root;password=corpcaptive; convert zero datetime=True;";
            //   MessageBox.Show(Main.activeB);
            //  //   DBConnection = "islabank";
            // }
@@ -37,8 +35,8 @@ namespace ChinaBank_FIX.Services
                //ableName;
                //BConnection = "";
               //DBConnection = "datasource=localhost;port=3306;username=root;password=secret; convert zero datetime=True;";
-                //DBConnection = "datasource=192.168.0.254;port=3306;username=root;password=CorpCaptive; convert zero datetime=True;";
-                MessageBox.Show(Main.activeB);
+                DBConnection = "datasource=192.168.0.254;port=3306;username=root;password=CorpCaptive; convert zero datetime=True;";
+               // MessageBox.Show(Main.activeB);
             //   DBConnection = "captive_database";
               //}
 
@@ -67,7 +65,7 @@ namespace ChinaBank_FIX.Services
 
                 branch.BranchName = !reader.IsDBNull(1) ? reader.GetString(1) : "";
 
-                branch.LastNo_PA = !reader.IsDBNull(2) ? reader.GetInt64(2) : 0;
+                branch.LastNo_Regular = !reader.IsDBNull(2) ? reader.GetInt64(2) : 0;
 
                 _branches.Add(branch);
             }
@@ -77,10 +75,36 @@ namespace ChinaBank_FIX.Services
 
             return _branches;
         }
+        public List<BranchModel> GetBranchesCBS(List<BranchModel> _branches)
+        {
+            DBCon();
+            string sql = "Select BRSTN,Address1 from captive_database.master_database_cbs_branches";
+            MySqlCommand cmd = new MySqlCommand(sql, myConnect);
+            MySqlDataReader reader = cmd.ExecuteReader();
+
+            while (reader.Read())
+            {
+                BranchModel branch = new BranchModel();
+
+                branch.BRSTN = !reader.IsDBNull(0) ? reader.GetString(0) : "";
+
+                branch.BranchName = !reader.IsDBNull(1) ? reader.GetString(1) : "";
+
+               // branch.LastNo_Regular = !reader.IsDBNull(2) ? reader.GetInt64(2) : 0;
+
+                _branches.Add(branch);
+            }
+
+
+            DBClosed();
+
+            return _branches;
+        }
+
         public List<HistoryModel> GetHistory(List<HistoryModel> _history)
         {
             DBCon();
-            string query = "SELECT BRSTN, ChequeName, MAX(CAST(EndingSerial as DECIMAL(18,0)))EndingSerial FROM captive_database.master_database_philtrust WHERE ChequeName <>'' GROUP BY BRSTN, ChequeName";
+            string query = "SELECT BRSTN, ChequeName, MAX(CAST(EndingSerial as DECIMAL(18,0)))EndingSerial FROM captive_database.master_database_"+Main.activeB+" WHERE ChequeName <>'' GROUP BY BRSTN, ChequeName";
 
             //  MySqlConnection conn = new MySqlConnection(myConnect);
 
@@ -102,20 +126,77 @@ namespace ChinaBank_FIX.Services
 
                 _history.Add(history);
             }
-
+           // RemoveDuplicatePreEncoded();
             DBClosed();
             return _history;
-            // RemoveDuplicatePreEncoded();
+           
         }
+        //private void RemoveDuplicatePreEncoded()
+        //{
+        //    var personalPre = historyList.Where(r => r.ChequeName == "Personal Pre-Encoded").ToList();
+
+        //    var commercialPre = historyList.Where(r => r.ChequeName == "Commercial Pre-Encoded").ToList();
+
+        //    personalPre.ForEach(x =>
+        //    {
+        //        var temp = historyList.FirstOrDefault(r => r.BRSTN == x.BRSTN && r.ChequeName == "Regular Personal");
+
+        //        if (temp != null)
+        //        {
+        //            if (x.MaxEnding >= temp.MaxEnding)
+        //                historyList.Remove(temp);
+        //            else
+        //                historyList.Remove(x);
+        //        }
+        //    });
+
+        //    commercialPre.ForEach(y =>
+        //    {
+        //        var temp = historyList.FirstOrDefault(r => r.BRSTN == y.BRSTN && r.ChequeName == "Regular Commercial");
+
+        //        if (temp != null)
+        //        {
+        //            if (y.MaxEnding >= temp.MaxEnding)
+        //                historyList.Remove(temp);
+        //            else
+        //                historyList.Remove(y);
+        //        }
+        //    });
+        //}
         public ErrorModel InsertData(ErrorModel _data, string _date, string _ChequeName)
         {
             MySqlCommand myCmd = new MySqlCommand();
-            myCmd = new MySqlCommand("INSERT INTO captive_database.philtrust_fix (BRSTN, BranchName, CheckType, OldSerial, CorrectSerial,Date) VALUES" +
+            myCmd = new MySqlCommand("INSERT INTO captive_database."+Main.activeB+"_fix (BRSTN, BranchName, CheckType, OldSerial, CorrectSerial,Date) VALUES" +
                             "('" + _data.BRSTN + "','" + _data.BranchName.Replace("'", " ") + "','" + _ChequeName + "','" + _data.CurrentSerial + "','" + _data.HistorySerial + "','" + _date + "');", myConnect);
 
             myCmd.ExecuteNonQuery();
             return _data;
 
+        }
+        public List<ErrorModel> FixError(List<ErrorModel> _errorList)
+        {
+            var Regular = _errorList.Where(r => r.CheckType == "Regular Checks").ToList();
+
+
+            if (Regular != null)
+            {
+                DBCon();
+                MySqlCommand command;
+                Regular.ForEach(p =>
+                {
+                    //UPDATE REF
+                    command = new MySqlCommand("UPDATE captive_database.master_database_cbc_branches SET Reg_LastNo = '" + p.HistorySerial + "' WHERE BRSTN = '" + p.BRSTN + "'", myConnect);
+
+                    command.ExecuteNonQuery();
+
+                    ////SAVE TO HISTORY
+                    InsertData(p, DateTime.Now.ToString("yyyy-MM-dd"), "Regular Checks");
+                });
+
+            }
+
+            DBClosed();
+            return _errorList;
         }
     }
 }

@@ -23,13 +23,13 @@ namespace ChinaBank_FIX
             CBC cbc = new CBC();
             cbc.Show();
             this.Hide();
-            activeB = "CBC";
+            activeB = "cbc";
 
         }
 
         private void btmCBS_Click(object sender, EventArgs e)
         {
-            activeB = "CBS";
+            activeB = "cbs";
             CBS cbs = new CBS();
             cbs.Show();
             this.Hide();

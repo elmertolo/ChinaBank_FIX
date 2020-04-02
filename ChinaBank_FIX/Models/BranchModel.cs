@@ -11,8 +11,8 @@ namespace ChinaBank_FIX.Models
         public string BRSTN { get; set; }
         
         public string BranchName { get; set; }
-        public Int64? LastNo_PA { get; set; }
-        public Int64? LastNo_CA { get; set; }
-
+        public Int64? LastNo_Regular { get; set; }
+        public Int64? LastNo_SmallBiz_PA { get; set; }
+        public Int64? LastNo_SmallBiz_CA { get; set; }
     }
 }
